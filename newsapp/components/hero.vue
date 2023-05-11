@@ -6,7 +6,7 @@
             <div class="text">
                 <span class="mini-heading">Welcome to Game News</span>
                 <h1><span>Now </span>Read</h1>
-                <a href="#news" class="button">Read More</a>
+                <a href="#news-content" class="button">Read More</a>
             </div>
         </div>
     </div>

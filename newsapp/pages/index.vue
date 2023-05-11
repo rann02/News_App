@@ -51,7 +51,7 @@ export default {
   methods: {
     async getNews() {
       try {
-        const { data } = await axios.get('http://localhost:3001/api/games?page=1')
+        const { data } = await axios.get('http://localhost:3001/api/games?page=4')
         data.forEach(article => {
           this.news.push(article)
         });

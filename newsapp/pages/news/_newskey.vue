@@ -1,23 +1,23 @@
 <template>
     <Loading v-if="$fetchState.pending" />
-    <div v-else class="container single-movie">
+    <div v-else class="container single-article">
         <div class="button-group">
             <NuxtLink class="button" :to="{ name: 'index' }">Back</NuxtLink>
             <NuxtLink class="button button-light" :to="{ name: 'edit-newskey' }">Edit</NuxtLink>
         </div>
-        <div class="movie-info">
-            <div class="movie-img">
-                <img :src="article.content[0]" alt="" />
+        <div class="article-info">
+            <div class="article-img">
+                <img :src="$store.state.article.content[0]" alt="" />
             </div>
-            <div class="movie-contents">
-                <h1>{{ article.title }}</h1>
-                <p class="movie-fact tagline">
-                    <span>Categories:</span> {{ article.categories.toString() }}
+            <div class="article-contents">
+                <h1>{{ $store.state.article.title }}</h1>
+                <p class="article-fact tagline">
+                    <span>Categories:</span> {{ $store.state.article.categories.toString() }}
                 </p>
-                <p class="movie-fact">
+                <p class="article-fact">
                     <span>Date:</span>
                     {{
-                        new Date(article.date).toLocaleString('en-id', {
+                        new Date($store.state.article.date).toLocaleString('en-id', {
                             month: 'long',
                             day: 'numeric',
                             year: 'numeric',
@@ -26,7 +26,7 @@
                 </p>
             </div>
         </div>
-        <p class="movie-fact news-content" v-for="(content, index) in article.content.slice(1)" :key="index">
+        <p class="article-fact news-content" v-for="(content, index) in $store.state.article.content.slice(1)" :key="index">
             <a :href="content" v-if="urlChecker(content)">click here</a>
             <span v-else>{{ content }}</span>
         </p>
@@ -34,28 +34,13 @@
 </template>
 
 <script>
-import axios from 'axios';
 export default {
     name: 'singel-article',
-    data() {
-        return {
-            article: null,
-        }
-    },
     async fetch() {
-        await this.getArticle()
+        await this.$store.dispatch('getArticle', this.$route.params.newskey)
     },
     fetchDelay: 1000,
     methods: {
-        async getArticle() {
-            try {
-                const { data } = await axios.get(`http://localhost:3001/api/detail/${this.$route.params.newskey}`)
-                this.article = data.results
-                console.log(data);
-            } catch (error) {
-                console.log(error);
-            }
-        },
         urlChecker(url) {
             const regex = new RegExp(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/)
             return (regex.test(url))
@@ -65,7 +50,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.single-movie {
+.single-article {
     color: #fff;
     min-height: 100vh;
     display: flex;
@@ -85,7 +70,7 @@ export default {
 
     }
 
-    .movie-info {
+    .article-info {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -97,7 +82,7 @@ export default {
             align-items: flex-start;
         }
 
-        .movie-img {
+        .article-img {
             img {
                 max-height: 500px;
                 width: 100%;
@@ -109,13 +94,13 @@ export default {
             }
         }
 
-        .movie-contents {
+        .article-contents {
             h1 {
                 font-size: 56px;
                 font-weight: 400;
             }
 
-            .movie-fact {
+            .article-fact {
                 margin-top: 12px;
                 font-size: 20px;
                 line-height: 1.5;

@@ -3,13 +3,10 @@ import axios from 'axios'
 export const state = () => ({
   news: [],
   article: null,
+  keyBefore: '',
 })
 
-export const getters = {
-  // getCounter(state) {
-  //   return state.counter
-  // },
-}
+export const getters = {}
 
 export const mutations = {
   GET_NEWS(state, news) {
@@ -19,6 +16,15 @@ export const mutations = {
   },
   GET_ARTICLE(state, article) {
     state.article = article
+  },
+  EDIT_ARTICLE(state, article) {
+    const faund = state.news.find((el) => el.key == article.key)
+    faund.title = article.title
+    faund.thumb = article.image
+    state.article.title = article.title
+    state.article.content = [article.image]
+    state.article.content.push(article.text)
+    state.keyBefore = article.key
   },
 }
 
@@ -33,12 +39,10 @@ export const actions = {
   },
   async getArticle({ commit }, param) {
     try {
-      console.log('masuk')
       const { data } = await axios.get(
         `http://localhost:3001/api/detail/${param}`
       )
       commit('GET_ARTICLE', data.results)
-      console.log(data)
     } catch (error) {
       console.log(error)
     }

@@ -17,7 +17,7 @@ export default {
   async fetch() {
     await this.$store.dispatch('getNews')
   },
-  fetchDelay: 1000,
+  // fetchDelay: 1000,
 }
 </script>
 

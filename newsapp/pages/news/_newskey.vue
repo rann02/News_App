@@ -3,7 +3,10 @@
     <div v-else class="container single-article">
         <div class="button-group">
             <NuxtLink class="button" :to="{ name: 'index' }">Back</NuxtLink>
-            <NuxtLink class="button button-light" :to="{ name: 'edit-newskey' }">Edit</NuxtLink>
+            <NuxtLink class="button button-light"
+                :to="{ name: 'edit-newskey', params: { newskey: this.$route.params.newskey } }">
+                Edit
+            </NuxtLink>
         </div>
         <div class="article-info">
             <div class="article-img">
@@ -26,10 +29,11 @@
                 </p>
             </div>
         </div>
-        <p class="article-fact news-content" v-for="(content, index) in $store.state.article.content.slice(1)" :key="index">
+        <div class="article-fact news-content" v-for="(content, index) in $store.state.article.content.slice(1)"
+            :key="index">
+            <div v-html="content">{{ content }} </div>
             <a :href="content" v-if="urlChecker(content)">click here</a>
-            <span v-else>{{ content }}</span>
-        </p>
+        </div>
     </div>
 </template>
 
@@ -38,8 +42,8 @@ export default {
     name: 'singel-article',
     async fetch() {
         await this.$store.dispatch('getArticle', this.$route.params.newskey)
+
     },
-    fetchDelay: 1000,
     methods: {
         urlChecker(url) {
             const regex = new RegExp(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/)
